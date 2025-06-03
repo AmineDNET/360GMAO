@@ -1,0 +1,11 @@
+# Ignore .NET build artifacts
+**/bin/
+**/obj/
+*.user
+*.suo
+.vs/
+.idea/
+# OS files
+.DS_Store
+# Logs
+*.log
