@@ -7,9 +7,9 @@ namespace GMAO.Application.Commands;
 
 public class UpdateAssetCommandHandler : IRequestHandler<UpdateAssetCommand>
 {
-    private readonly IRepository<Asset> _repository;
+    private readonly IAssetRepository _repository;
 
-    public UpdateAssetCommandHandler(IRepository<Asset> repository)
+    public UpdateAssetCommandHandler(IAssetRepository repository)
     {
         _repository = repository;
     }

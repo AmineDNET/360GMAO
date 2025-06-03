@@ -7,9 +7,9 @@ namespace GMAO.Application.Commands;
 
 public class CreateAssetCommandHandler : IRequestHandler<CreateAssetCommand, Guid>
 {
-    private readonly IRepository<Asset> _repository;
+    private readonly IAssetRepository _repository;
 
-    public CreateAssetCommandHandler(IRepository<Asset> repository)
+    public CreateAssetCommandHandler(IAssetRepository repository)
     {
         _repository = repository;
     }

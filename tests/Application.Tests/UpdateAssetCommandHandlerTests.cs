@@ -17,7 +17,7 @@ public class UpdateAssetCommandHandlerTests
         // Arrange
         var id = Guid.NewGuid();
         var asset = Asset.Create(id, "Pump", "SiteA", "Loc1", AssetStatus.Active);
-        var repoMock = new Mock<IRepository<Asset>>();
+        var repoMock = new Mock<IAssetRepository>();
         repoMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(asset);
         var handler = new UpdateAssetCommandHandler(repoMock.Object);
         var command = new UpdateAssetCommand(id, "Pump2", "SiteB", "Loc2", AssetStatus.OutOfService);
@@ -36,7 +36,7 @@ public class UpdateAssetCommandHandlerTests
     {
         var id = Guid.NewGuid();
         var asset = Asset.Create(id, "Pump", "SiteA", "Loc1", AssetStatus.Active);
-        var repoMock = new Mock<IRepository<Asset>>();
+        var repoMock = new Mock<IAssetRepository>();
         repoMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(asset);
         var handler = new UpdateAssetCommandHandler(repoMock.Object);
         var command = new UpdateAssetCommand(id, "", "SiteB", "Loc2", AssetStatus.Active);
@@ -49,12 +49,24 @@ public class UpdateAssetCommandHandlerTests
     {
         var id = Guid.NewGuid();
         var asset = Asset.Create(id, "Pump", "SiteA", "Loc1", AssetStatus.Active);
-        var repoMock = new Mock<IRepository<Asset>>();
+        var repoMock = new Mock<IAssetRepository>();
         repoMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(asset);
         var handler = new UpdateAssetCommandHandler(repoMock.Object);
         var invalidStatus = (AssetStatus)99;
         var command = new UpdateAssetCommand(id, "Pump2", "SiteB", "Loc2", invalidStatus);
 
         await Assert.ThrowsAsync<ArgumentException>(() => handler.Handle(command, CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task Handle_Should_Throw_When_Asset_Not_Found()
+    {
+        var id = Guid.NewGuid();
+        var repoMock = new Mock<IAssetRepository>();
+        repoMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync((Asset?)null);
+        var handler = new UpdateAssetCommandHandler(repoMock.Object);
+        var command = new UpdateAssetCommand(id, "Pump", "SiteA", "Loc1", AssetStatus.Active);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => handler.Handle(command, CancellationToken.None));
     }
 }

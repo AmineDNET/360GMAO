@@ -15,7 +15,7 @@ public class CreateAssetCommandHandlerTests
     public async Task Handle_Should_Add_Asset_And_Return_Id()
     {
         // Arrange
-        var repoMock = new Mock<IRepository<Asset>>();
+        var repoMock = new Mock<IAssetRepository>();
         var handler = new CreateAssetCommandHandler(repoMock.Object);
         var command = new CreateAssetCommand("Pump", "SiteA", "Loc1", AssetStatus.Active);
 
